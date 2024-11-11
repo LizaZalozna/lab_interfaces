@@ -18,8 +18,23 @@ namespace interfaces
             private int nom, denom;
             public MyFrac(int nom, int denom)
             {
-                this.nom = nom;
-                this.denom = denom;
+                int k = Evklid(nom, denom);
+                this.nom = nom / k;
+                this.denom = denom / k;
+            }
+            private static int Evklid(int f, int s)
+            {
+                while (s != 0)
+                {
+                    int temp = s;
+                    s = f % s;
+                    f = temp;
+                }
+                return f;
+            }
+            public override string ToString()
+            {
+                return $"{nom}/{denom}";
             }
 
             MyFrac IMyNumber<MyFrac>.Add(MyFrac that)
@@ -52,6 +67,11 @@ namespace interfaces
                 this.imaginary = imaginary;
             }
 
+            public override string ToString()
+            {
+                return $"{real}+{imaginary}i";
+            }
+
             MyComplex IMyNumber<MyComplex>.Add(MyComplex that)
             {
                 return new MyComplex(this.real + that.real, this.imaginary + that.imaginary);
@@ -72,6 +92,36 @@ namespace interfaces
                 return new MyComplex((this.real * that.real + this.imaginary * that.imaginary)/(that.real*that.real+that.imaginary*that.imaginary),
                     (this.imaginary * that.real - this.real * that.imaginary)/ (that.real * that.real + that.imaginary * that.imaginary));
             }
+        }
+        static void TestAPlusBSquare<T>(T a, T b) where T : IMyNumber<T>
+        {
+            Console.WriteLine("=== Starting testing (a+b)^2=a^2+2ab+b^2 with a = " + a + ", b = " + b + " ===");
+            T aPlusB = a.Add(b);
+            Console.WriteLine("a = " + a);
+            Console.WriteLine("b = " + b);
+            Console.WriteLine("(a + b) = " + aPlusB);
+            Console.WriteLine("(a+b)^2 = " + aPlusB.Multiply(aPlusB));
+            Console.WriteLine(" = = = ");
+            T curr = a.Multiply(a);
+            Console.WriteLine("a^2 = " + curr);
+            T wholeRightPart = curr;
+            curr = a.Multiply(b); // ab
+            curr = curr.Add(curr); // ab + ab = 2ab
+            // I'm not sure how to create constant factor "2" in more elegant way,
+            // without knowing how IMyNumber is implemented
+            Console.WriteLine("2*a*b = " + curr);
+            wholeRightPart = wholeRightPart.Add(curr);
+            curr = b.Multiply(b);
+            Console.WriteLine("b^2 = " + curr);
+            wholeRightPart = wholeRightPart.Add(curr);
+            Console.WriteLine("a^2+2ab+b^2 = " + wholeRightPart);
+            Console.WriteLine("=== Finishing testing (a+b)^2=a^2+2ab+b^2 with a = " + a + ", b = " + b + " ===");
+        }
+        static void Main(string[] args)
+        {
+            TestAPlusBSquare(new MyFrac(1, 3), new MyFrac(1, 6));
+            TestAPlusBSquare(new MyComplex(1, 3), new MyComplex(1, 6));
+            Console.ReadKey();
         }
     }
 }
