@@ -43,5 +43,35 @@ namespace interfaces
             }
         }
 
+        class MyComplex : IMyNumber<MyComplex>
+        {
+            private int real, imaginary;
+            public MyComplex(int real, int imaginary)
+            {
+                this.real = real;
+                this.imaginary = imaginary;
+            }
+
+            MyComplex IMyNumber<MyComplex>.Add(MyComplex that)
+            {
+                return new MyComplex(this.real + that.real, this.imaginary + that.imaginary);
+            }
+
+            MyComplex IMyNumber<MyComplex>.Subtract(MyComplex that)
+            {
+                return new MyComplex(this.real - that.real, this.imaginary - that.imaginary);
+            }
+
+            MyComplex IMyNumber<MyComplex>.Multiply(MyComplex that)
+            {
+                return new MyComplex(this.real * that.real - this.imaginary * that.imaginary, this.real * that.imaginary + this.imaginary * that.real);
+            }
+
+            MyComplex IMyNumber<MyComplex>.Divide(MyComplex that)
+            {
+                return new MyComplex((this.real * that.real + this.imaginary * that.imaginary)/(that.real*that.real+that.imaginary*that.imaginary),
+                    (this.imaginary * that.real - this.real * that.imaginary)/ (that.real * that.real + that.imaginary * that.imaginary));
+            }
+        }
     }
 }
