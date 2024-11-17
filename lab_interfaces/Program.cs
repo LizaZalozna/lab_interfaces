@@ -66,8 +66,8 @@ namespace lab_interfaces
 
         public class MyComplex : IMyNumber<MyComplex>
         {
-            public int real, imaginary;
-            public MyComplex(int real, int imaginary)
+            public double real, imaginary;
+            public MyComplex(double real, double imaginary)
             {
                 this.real = real;
                 this.imaginary = imaginary;
