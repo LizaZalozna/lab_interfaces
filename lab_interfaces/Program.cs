@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Numerics;
 
-namespace interfaces
+namespace lab_interfaces
 {
-    class Program
+    public class Program
     {
-        interface IMyNumber<T> where T : IMyNumber<T>
+        public interface IMyNumber<T> where T : IMyNumber<T>
         {
             T Add(T b);
             T Subtract(T b);
@@ -13,12 +13,18 @@ namespace interfaces
             T Divide(T b);
         }
 
-        class MyFrac: IMyNumber<MyFrac>
+        public class MyFrac: IMyNumber<MyFrac>
         {
-            private int nom, denom;
+            public int nom, denom;
             public MyFrac(int nom, int denom)
             {
+                if (denom < 0)
+                {
+                    nom *= -1;
+                    denom *= -1;
+                }
                 int k = Evklid(nom, denom);
+                if (k < 0) k *= -1;
                 this.nom = nom / k;
                 this.denom = denom / k;
             }
@@ -58,9 +64,9 @@ namespace interfaces
             }
         }
 
-        class MyComplex : IMyNumber<MyComplex>
+        public class MyComplex : IMyNumber<MyComplex>
         {
-            private int real, imaginary;
+            public int real, imaginary;
             public MyComplex(int real, int imaginary)
             {
                 this.real = real;
