@@ -15,50 +15,41 @@ namespace lab_interfaces
 
         public class MyFrac: IMyNumber<MyFrac>
         {
-            public int nom, denom;
-            public MyFrac(int nom, int denom)
+            public BigInteger nom, denom;
+            public MyFrac(BigInteger nom, BigInteger denom)
             {
+                if (denom == 0) throw new DivideByZeroException("Denominator cannot be zero");
                 if (denom < 0)
                 {
                     nom *= -1;
                     denom *= -1;
                 }
-                int k = Evklid(nom, denom);
+                BigInteger k = BigInteger.GreatestCommonDivisor(nom, denom);
                 if (k < 0) k *= -1;
                 this.nom = nom / k;
                 this.denom = denom / k;
-            }
-            private static int Evklid(int f, int s)
-            {
-                while (s != 0)
-                {
-                    int temp = s;
-                    s = f % s;
-                    f = temp;
-                }
-                return f;
             }
             public override string ToString()
             {
                 return $"{nom}/{denom}";
             }
 
-            MyFrac IMyNumber<MyFrac>.Add(MyFrac that)
+            public MyFrac Add(MyFrac that)
             {
                 return new MyFrac(this.nom * that.denom + that.nom * this.denom, this.denom * that.denom);
             }
 
-            MyFrac IMyNumber<MyFrac>.Subtract(MyFrac that)
+            public MyFrac Subtract(MyFrac that)
             {
                 return new MyFrac(this.nom * that.denom - that.nom * this.denom, this.denom * that.denom);
             }
 
-            MyFrac IMyNumber<MyFrac>.Multiply(MyFrac that)
+            public MyFrac Multiply(MyFrac that)
             {
                 return new MyFrac(this.nom * that.nom, this.denom * that.denom);
             }
 
-            MyFrac IMyNumber<MyFrac>.Divide(MyFrac that)
+            public MyFrac Divide(MyFrac that)
             {
                 return new MyFrac(this.nom * that.denom, this.denom * that.nom);
             }
@@ -78,22 +69,22 @@ namespace lab_interfaces
                 return $"{real}+{imaginary}i";
             }
 
-            MyComplex IMyNumber<MyComplex>.Add(MyComplex that)
+            public MyComplex Add(MyComplex that)
             {
                 return new MyComplex(this.real + that.real, this.imaginary + that.imaginary);
             }
 
-            MyComplex IMyNumber<MyComplex>.Subtract(MyComplex that)
+            public MyComplex Subtract(MyComplex that)
             {
                 return new MyComplex(this.real - that.real, this.imaginary - that.imaginary);
             }
 
-            MyComplex IMyNumber<MyComplex>.Multiply(MyComplex that)
+            public MyComplex Multiply(MyComplex that)
             {
                 return new MyComplex(this.real * that.real - this.imaginary * that.imaginary, this.real * that.imaginary + this.imaginary * that.real);
             }
 
-            MyComplex IMyNumber<MyComplex>.Divide(MyComplex that)
+            public MyComplex Divide(MyComplex that)
             {
                 return new MyComplex((this.real * that.real + this.imaginary * that.imaginary)/(that.real*that.real+that.imaginary*that.imaginary),
                     (this.imaginary * that.real - this.real * that.imaginary)/ (that.real * that.real + that.imaginary * that.imaginary));
