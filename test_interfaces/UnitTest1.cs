@@ -192,5 +192,14 @@ namespace test_interfaces
             Assert.AreEqual(72 / 109.0, res.real);
             Assert.AreEqual(131 / 109.0, res.imaginary);
         }
+
+        [Test]
+        public void Test9()
+        {
+            var d1 = new MyFrac(0, 3);
+            var d2 = new MyFrac(0, 1);
+
+            Assert.Throws<DivideByZeroException>(() => d1.Divide(d2));
+        }
     }
 }
