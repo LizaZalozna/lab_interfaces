@@ -13,7 +13,7 @@ namespace lab_interfaces
             T Divide(T b);
         }
 
-        public class MyFrac: IMyNumber<MyFrac>
+        public class MyFrac: IMyNumber<MyFrac>, IComparable<MyFrac>
         {
             public BigInteger nom, denom;
 
@@ -68,6 +68,11 @@ namespace lab_interfaces
             {
                 return new MyFrac(this.nom * that.denom, this.denom * that.nom);
             }
+
+            public int CompareTo(MyFrac other)
+            {
+                return (this.nom /this.denom).CompareTo(other.nom / other.denom);
+            }
         }
 
         public class MyComplex : IMyNumber<MyComplex>
@@ -118,6 +123,7 @@ namespace lab_interfaces
                     (this.imaginary * that.real - this.real * that.imaginary)/ (that.real * that.real + that.imaginary * that.imaginary));
             }
         }
+
         static void TestAPlusBSquare<T>(T a, T b) where T : IMyNumber<T>
         {
             Console.WriteLine("=== Starting testing (a+b)^2=a^2+2ab+b^2 with a = " + a + ", b = " + b + " ===");
@@ -142,10 +148,41 @@ namespace lab_interfaces
             Console.WriteLine("a^2+2ab+b^2 = " + wholeRightPart);
             Console.WriteLine("=== Finishing testing (a+b)^2=a^2+2ab+b^2 with a = " + a + ", b = " + b + " ===");
         }
+
+        static void TestSquaresDifference<T>(T a, T b) where T : IMyNumber<T>
+        {
+            Console.WriteLine("=== Starting testing (a+b)^2=a^2+2ab+b^2 with a = " + a + ", b = " + b + " ===");
+            T aMinusB = a.Subtract(b);
+            Console.WriteLine("a = " + a);
+            Console.WriteLine("b = " + b);
+            Console.WriteLine("a - b = " + aMinusB);
+            Console.WriteLine(" = = = ");
+            T curr = a.Multiply(a);
+            Console.WriteLine("a^2 = " + curr);
+            T wholeRightPart = curr;
+            curr = b.Multiply(b);
+            Console.WriteLine("b^2 = " + curr);
+            wholeRightPart = wholeRightPart.Subtract(curr);
+            curr = a.Add(b);
+            Console.WriteLine("a+b = " + curr);
+            wholeRightPart = wholeRightPart.Divide(curr);
+            Console.WriteLine("(a^2-b^2)/(a+b) = " + wholeRightPart);
+            Console.WriteLine("=== Finishing testing a-b=(a^2-b^2)/(a+b) with a = " + a + ", b = " + b + " ===");
+        }
+
         static void Main(string[] args)
         {
             TestAPlusBSquare(new MyFrac(1, 3), new MyFrac(1, 6));
             TestAPlusBSquare(new MyComplex(1, 3), new MyComplex(1, 6));
+            TestSquaresDifference(new MyFrac(1, 3), new MyFrac(1, 6));
+            TestSquaresDifference(new MyComplex(1, 3), new MyComplex(1, 6));
+
+            MyFrac[] array = new MyFrac[] { new MyFrac(2, 6), new MyFrac(2, 1), new MyFrac(83, -2) };
+            Array.Sort(array);
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.WriteLine(array[i]);
+            }
             Console.ReadKey();
         }
     }
