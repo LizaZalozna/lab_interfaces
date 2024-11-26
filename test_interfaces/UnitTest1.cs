@@ -201,5 +201,35 @@ namespace test_interfaces
 
             Assert.Throws<DivideByZeroException>(() => d1.Divide(d2));
         }
+
+        [Test]
+        public void Test10()
+        {
+            Assert.Throws<ArgumentException>(() => new MyFrac("98.6"));
+        }
+
+        [Test]
+        public void Test11()
+        {
+            var d1 = new MyFrac("2/5");
+
+            Assert.AreEqual((BigInteger)2, d1.nom);
+            Assert.AreEqual((BigInteger)5, d1.denom);
+        }
+
+        [Test]
+        public void Test12()
+        {
+            Assert.Throws<ArgumentException>(() => new MyComplex("98/6"));
+        }
+
+        [Test]
+        public void Test13()
+        {
+            var d1 = new MyComplex("-64.9+15i");
+
+            Assert.AreEqual(-64.9, d1.real);
+            Assert.AreEqual(15, d1.imaginary);
+        }
     }
 }

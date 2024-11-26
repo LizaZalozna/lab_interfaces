@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-
+using System.Text.RegularExpressions;
 namespace lab_interfaces
 {
     public class Program
@@ -16,6 +16,7 @@ namespace lab_interfaces
         public class MyFrac: IMyNumber<MyFrac>
         {
             public BigInteger nom, denom;
+
             public MyFrac(BigInteger nom, BigInteger denom)
             {
                 if (denom == 0) throw new DivideByZeroException("Denominator cannot be zero");
@@ -29,6 +30,20 @@ namespace lab_interfaces
                 this.nom = nom / k;
                 this.denom = denom / k;
             }
+
+            public MyFrac(string data)
+            {
+                Regex r = new Regex(@"-?\d+\/-?\d+");
+                if (r.IsMatch(data))
+                {
+                    string[] data1 = data.Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
+                    MyFrac l = new MyFrac(BigInteger.Parse(data1[0]), BigInteger.Parse(data1[1]));
+                    this.nom = l.nom;
+                    this.denom = l.denom;
+                }
+                else throw new ArgumentException("Input string is not in the correct format");
+            }
+
             public override string ToString()
             {
                 return $"{nom}/{denom}";
@@ -58,10 +73,23 @@ namespace lab_interfaces
         public class MyComplex : IMyNumber<MyComplex>
         {
             public double real, imaginary;
+
             public MyComplex(double real, double imaginary)
             {
                 this.real = real;
                 this.imaginary = imaginary;
+            }
+
+            public MyComplex(string data)
+            {
+                Regex r = new Regex(@"^(-?\d+(\.\d+)?)([+-]\d+(\.\d+)?)i$");
+                if (r.IsMatch(data))
+                {
+                    Match match = r.Match(data);
+                    this.real = double.Parse(match.Groups[1].Value);
+                    this.imaginary = double.Parse(match.Groups[3].Value);
+                }
+                else throw new ArgumentException("Input string is not in the correct format");
             }
 
             public override string ToString()
